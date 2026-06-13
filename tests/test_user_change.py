@@ -1,6 +1,6 @@
 import allure
 import pytest
-from api_client import change_user_api, change_user_unauthorized_api
+from api_client import UserApi
 from helpers import generate_new_user_data
 from test_data import ErrorMessages
 
@@ -13,7 +13,7 @@ class TestChangeUser:
         email, password, name, access_token = create_and_delete_user
         new_email, new_password, new_name = generate_new_user_data()
 
-        response = change_user_api(access_token, email=new_email, password=new_password, name=new_name)
+        response = UserApi.change_user(access_token, email=new_email, password=new_password, name=new_name)
 
         assert response.status_code == 200
         assert response.json()["user"]["email"] == new_email
@@ -24,7 +24,7 @@ class TestChangeUser:
         email, password, name, _ = create_and_delete_user
         new_email, new_password, new_name = generate_new_user_data()
 
-        response = change_user_unauthorized_api(email=new_email, password=new_password, name=new_name)
+        response = UserApi.change_user_unauthorized(email=new_email, password=new_password, name=new_name)
 
         assert response.status_code == 401
         assert response.json()["message"] == ErrorMessages.UNAUTHORIZED
